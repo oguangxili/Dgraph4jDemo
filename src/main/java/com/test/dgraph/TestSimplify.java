@@ -13,7 +13,7 @@ import io.dgraph.DgraphProto.Response;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-public class test2 {
+public class TestSimplify {
 
 	public static void main(String[] args) {
 
