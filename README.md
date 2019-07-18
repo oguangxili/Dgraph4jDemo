@@ -3,6 +3,7 @@ java操作Dgraph例子
 https://github.com/oguangxili/Dgraph4jDemo.git
 
 说明:
+
 Test类是官方给的hello world.包括建库,删除模式,设置模式,查询全套操作.
 
 TestSimplify类是简化版本,在图库里面一次添加索引,一次数据突变后,即可自己查询
