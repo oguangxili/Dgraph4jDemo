@@ -69,20 +69,20 @@ public class HelloWorld {
 				  "}\n"+
 				"}\n";	
 		
-		
-		query =
-				"query all($a: string){\n"+
-				 "rows(func:eq(pid,$a)) {\n"+
-				    "id,name,organCode\n"+
-				  "}\n"+
-				"}\n";	
+//		
+//		query =
+//				"query all($a: string){\n"+
+//				 "rows(func:eq(pid,$a)) {\n"+
+//				    "id,name,organCode\n"+
+//				  "}\n"+
+//				"}\n";	
 				
 //		"query all($a: string){\n" +
 //		"  all(func: eq(name, $a)) {\n" +
 //		"    name\n" +
 //		"  }\n" +
 //		"}\n";
-		Map<String, String> vars = Collections.singletonMap("$a", "87458ed0a57e42bbbf5d433e7e655e1d");
+		Map<String, String> vars = Collections.singletonMap("$a", "Star Wars");
 		Response res = dgraphClient.newReadOnlyTransaction().queryWithVars(query, vars);
 		System.out.println(res.getJson().toStringUtf8());
 		// Deserialize

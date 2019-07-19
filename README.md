@@ -77,3 +77,18 @@ HelloWorld是自己实验的数据.
     name
   }
 }
+
+
+
+
+
+{
+get(func: eq(name,"初一一班")) {
+	    name,
+		stuent{
+			stuname,
+		    sex,
+		    birth,
+	    }
+	}
+}
