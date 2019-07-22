@@ -80,7 +80,8 @@ HelloWorld是自己实验的数据.
 
 
 
-
+ExportMutations类写了一个生成set语句的例子:
+查询,需要在http://localhost:8000/?latest下面查询.
 
 {
 get(func: eq(name,"初一一班")) {
