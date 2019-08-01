@@ -4,9 +4,11 @@ https://github.com/oguangxili/Dgraph4jDemo.git
 
 说明:
 
-Test类是官方给的hello world.包括建库,删除模式,设置模式,查询全套操作.
+TestImportData类是官方给的hello world.包括建库,删除模式,设置模式,查询全套操作.
 
-TestSimplify类是简化版本,在图库里面一次添加索引,一次数据突变后,即可自己查询
+TestQuery类是简化版本,在图库里面一次添加索引,一次数据突变后,即可自己查询
+
+TestBatchImportData类是批量导入数据类，导入20w条实验数据查询
 
 HelloWorld是自己实验的数据.
 
@@ -62,6 +64,26 @@ HelloWorld是自己实验的数据.
   "food": "pizza"
 }}
 
+{
+    "set":{
+        "rows":[
+            {
+                "name":"diggy",
+                "food":"pizza"
+            },
+            {
+                "name":"diggy2",
+                "food":"pizza2"
+            }
+        ]
+    }
+}
+
+{
+  me(func:allofterms(name, "9333")) {
+    name
+  }
+}
 
 增加模式(查询时设置查询字段为索引):
 <director>: uid .

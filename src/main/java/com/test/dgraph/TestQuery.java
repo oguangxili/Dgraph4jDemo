@@ -13,7 +13,7 @@ import io.dgraph.DgraphProto.Response;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-public class TestSimplify {
+public class TestQuery {
 
 	public static void main(String[] args) {
 
@@ -21,7 +21,7 @@ public class TestSimplify {
 		ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9080).usePlaintext(true).build();
 		DgraphStub stub = DgraphGrpc.newStub(channel);
 		// DgraphClient dgraphClient = new DgraphClient(Collections.singletonList(stub));
-		DgraphClient dgraphClient = new DgraphClient(stub);
+		DgraphClient dgraphClient = new DgraphClient(stub); 
 		// 设置schema
 		//String schema = "name: string @index(exact) .";
 		//Operation op = Operation.newBuilder().setSchema(schema).build();
@@ -50,6 +50,8 @@ public class TestSimplify {
 		 */
 		
 		// Query
+		long time1 = System.currentTimeMillis();
+		System.out.println("begin:"+time1);
 		Gson gson = new Gson();
 		String query =
 		"query all($a: string){\n" +
@@ -57,14 +59,17 @@ public class TestSimplify {
 		"    name\n" +
 		"  }\n" +
 		"}\n";
-		Map<String, String> vars = Collections.singletonMap("$a", "Alice");
+		Map<String, String> vars = Collections.singletonMap("$a", "103001");
 		Response res = dgraphClient.newReadOnlyTransaction().queryWithVars(query, vars);
-
+		long time2 = System.currentTimeMillis();
+		System.out.println("end:"+time2);
+		System.out.println("time:"+(time2-time1));
 		// Deserialize
 		People ppl = gson.fromJson(res.getJson().toStringUtf8(), People.class);
 
 		// Print results
 		System.out.printf("people found: %d\n", ppl.all.size());
+
 		ppl.all.forEach(person -> System.out.println(person.name));
 
 	}

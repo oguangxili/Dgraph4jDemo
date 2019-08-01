@@ -17,10 +17,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class Test {
+public class TestImportData {
   private static final String TEST_HOSTNAME = "localhost";
   private static final int TEST_PORT = 9080;
-
+ 
   //创建dgraph
   private static DgraphClient createDgraphClient(boolean withAuthHeader) {
     ManagedChannel channel =
