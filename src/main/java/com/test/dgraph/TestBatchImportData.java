@@ -2,6 +2,9 @@ package com.test.dgraph;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
+import com.lmax.disruptor.util.ThreadHints;
+import com.sun.jmx.remote.internal.ClientCommunicatorAdmin;
+
 import io.dgraph.DgraphClient;
 import io.dgraph.DgraphGrpc;
 import io.dgraph.DgraphGrpc.DgraphStub;
@@ -50,115 +53,17 @@ public class TestBatchImportData {
 
     Gson gson = new Gson(); // For JSON encode/decode
 
-    Transaction txn = dgraphClient.newTransaction();
-    try {
-    	StringBuilder json = new StringBuilder();
-    	
-    	json.append("{\"rows\":[");
-    	for(int i=0;i<50000;i++){
-    	      //初始化数据
-    	      Person p = new Person();
-    	      p.name = String.valueOf(i);
-    	      //序列化为string
-    	      if(i!=49999){
-    	    	  json.append(gson.toJson(p)+",");
-    	      }else{
-    	    	  json.append(gson.toJson(p));
-    	      }
-    	}
-    	 json.append("]}");
-
-    	 // 运行mutation(数据突变--修改存储在Dgraph中的图结构 )
-    	 Mutation mu = Mutation.newBuilder().setSetJson(ByteString.copyFromUtf8(json.toString())).build();
-    	txn.mutate(mu);
-    	txn.commit();
-
-    } finally {
-      txn.discard();
-    }
-    
-    Transaction txn2 = dgraphClient.newTransaction();
-    try {
-    	StringBuilder json = new StringBuilder();
-    	
-    	json.append("{\"rows\":[");
-    	for(int i=50000;i<100000;i++){
-    	      //初始化数据
-    	      Person p = new Person();
-    	      p.name = String.valueOf(i);
-    	      //序列化为string
-    	      if(i!=99999){
-    	    	  json.append(gson.toJson(p)+",");
-    	      }else{
-    	    	  json.append(gson.toJson(p));
-    	      }
-    	}
-    	 json.append("]}");
-
-    	 // 运行mutation(数据突变--修改存储在Dgraph中的图结构 )
-    	 Mutation mu = Mutation.newBuilder().setSetJson(ByteString.copyFromUtf8(json.toString())).build();
-    	txn2.mutate(mu);
-    	txn2.commit();
-
-    } finally {
-      txn2.discard();
-    }
-    
-    
-    Transaction txn3 = dgraphClient.newTransaction();
-    try {
-    	StringBuilder json = new StringBuilder();
-    	
-    	json.append("{\"rows\":[");
-    	for(int i=100000;i<150000;i++){
-    	      //初始化数据
-    	      Person p = new Person();
-    	      p.name = String.valueOf(i);
-    	      //序列化为string
-    	      if(i!=149999){
-    	    	  json.append(gson.toJson(p)+",");
-    	      }else{
-    	    	  json.append(gson.toJson(p));
-    	      }
-    	}
-    	 json.append("]}");
-
-    	 // 运行mutation(数据突变--修改存储在Dgraph中的图结构 )
-    	 Mutation mu = Mutation.newBuilder().setSetJson(ByteString.copyFromUtf8(json.toString())).build();
-    	 txn3.mutate(mu);
-    	 txn3.commit();
-
-    } finally {
-    	txn3.discard();
-    }
-    
-    Transaction txn4 = dgraphClient.newTransaction();
-    try {
-    	StringBuilder json = new StringBuilder();
-    	
-    	json.append("{\"rows\":[");
-    	for(int i=150000;i<200000;i++){
-    	      //初始化数据
-    	      Person p = new Person();
-    	      p.name = String.valueOf(i);
-    	      //序列化为string
-    	      if(i!=199999){
-    	    	  json.append(gson.toJson(p)+",");
-    	      }else{
-    	    	  json.append(gson.toJson(p));
-    	      }
-    	}
-    	 json.append("]}");
-
-    	 // 运行mutation(数据突变--修改存储在Dgraph中的图结构 )
-    	 Mutation mu = Mutation.newBuilder().setSetJson(ByteString.copyFromUtf8(json.toString())).build();
-    	 txn4.mutate(mu);
-    	 txn4.commit();
-
-    } finally {
-    	txn4.discard();
-    }
-    
+    commit(dgraphClient,0,50000,49999);
+    commit(dgraphClient,50000,100000,99999);
+    commit(dgraphClient,100000,150000,149999);
+    commit(dgraphClient,150000,200000,199999);
+    commit(dgraphClient,200000,250000,249999);
+    commit(dgraphClient,250000,300000,299999);
+    commit(dgraphClient,300000,350000,349999);
+    commit(dgraphClient,350000,400000,399999);
+    commit(dgraphClient,400000,450000,449999);
+    commit(dgraphClient,450000,500000,499999);
+  
     // 查询
     long time1 = System.currentTimeMillis();
     String query =
@@ -174,6 +79,38 @@ public class TestBatchImportData {
     System.out.println(time2-time1);
     //ppl.all.forEach(person -> System.out.println(person.name));
   }
+  
+  public static void commit( DgraphClient dgraphClient ,int begin, int end,int temp){
+	  	Gson gson = new Gson();
+	    Transaction txn4 = dgraphClient.newTransaction();
+	    try {
+	    	StringBuilder json = new StringBuilder();
+	    	
+	    	json.append("{\"rows\":[");
+	    	for(int i=begin;i<end;i++){
+	    	      //初始化数据
+	    	      Person p = new Person();
+	    	      p.name = String.valueOf(i);
+	    	      //序列化为string
+	    	      if(i!=temp){
+	    	    	  json.append(gson.toJson(p)+",");
+	    	      }else{
+	    	    	  json.append(gson.toJson(p));
+	    	      }
+	    	}
+	    	 json.append("]}");
+
+	    	 // 运行mutation(数据突变--修改存储在Dgraph中的图结构 )
+	    	 Mutation mu = Mutation.newBuilder().setSetJson(ByteString.copyFromUtf8(json.toString())).build();
+	    	 txn4.mutate(mu);
+	    	 txn4.commit();
+
+	    } finally {
+	    	txn4.discard();
+	    }
+  }
+  
+  
 
   static class Person {
     String name;
